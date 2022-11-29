@@ -67,34 +67,34 @@
 // Создайте объект класса ExtendedDate и выведите на экран
 // результаты работы новых методов.
 
-class ExtendedDate extends Date {
-    dateLog(userdata) {
-        let arrMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        console.log(userdata.getDate() + ' ' + arrMonth[userdata.getMonth()]);
-    }
-    pastOrFuture(userdata) {
-        let res;
-        res = userdata.getDate() >= this.getDate();
-        res = userdata.getMonth() >= this.getMonth();
-        res = userdata.getFullYear() >= this.getFullYear();
-        return res;
-    }
-    abnormalYear(userdata) {
-        let y = userdata.getFullYear();
-        if (y % 400 === 0) return true;
-        return (y % 4 === 0 && y % 100 !== 0);
-    }
-    nextDate(userdata) {
-        userdata.setDate(userdata.getDate()+1);
-        return userdata;
-    }
-}
-let eD = new ExtendedDate();
-let anyDay = new Date(prompt('Enter your date in year-month-day format', '2022-11-15'));
-eD.dateLog(anyDay);
-console.log('It is a future Date: ' + eD.pastOrFuture(anyDay));
-console.log('It is a Date of abnormal year: ' + eD.abnormalYear(anyDay));
-console.log('Next date is ' + eD.nextDate(anyDay));
+// class ExtendedDate extends Date {
+//     dateLog(userdata) {
+//         let arrMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+//         console.log(userdata.getDate() + ' ' + arrMonth[userdata.getMonth()]);
+//     }
+//     pastOrFuture(userdata) {
+//         let res;
+//         res = userdata.getDate() >= this.getDate();
+//         res = userdata.getMonth() >= this.getMonth();
+//         res = userdata.getFullYear() >= this.getFullYear();
+//         return res;
+//     }
+//     abnormalYear(userdata) {
+//         let y = userdata.getFullYear();
+//         if (y % 400 === 0) return true;
+//         return (y % 4 === 0 && y % 100 !== 0);
+//     }
+//     nextDate(userdata) {
+//         userdata.setDate(userdata.getDate()+1);
+//         return userdata;
+//     }
+// }
+// let eD = new ExtendedDate();
+// let anyDay = new Date(prompt('Enter your date in year-month-day format', '2022-11-15'));
+// eD.dateLog(anyDay);
+// console.log('It is a future Date: ' + eD.pastOrFuture(anyDay));
+// console.log('It is a Date of abnormal year: ' + eD.abnormalYear(anyDay));
+// console.log('Next date is ' + eD.nextDate(anyDay));
 
 // Задание 3
 // Реализовать класс Employee, описывающий работника, и со-
@@ -106,8 +106,44 @@ console.log('Next date is ' + eD.nextDate(anyDay));
 // Создать объект класса EmpTable и вывести на экран результат
 // работы метода getHtml().
 
-
-
+class Employee {
+    constructor(surname, name, age, experience, jobTitle) {
+        this.surname = surname;
+        this.name = name;
+        this.age = age;
+        this.experience = experience;
+        this.jobTitle = jobTitle;
+    }
+}
+class EmpTable {
+    constructor(employees) {            //передаем массив работников
+        this.employees = employees;
+    }
+    getHtml() {
+        document.write('<table>');
+        document.write('<tr>');
+        for (let keys in this.employees[0]) {    //печатаем заголовок таблицы через перебор циклом for in названий
+            document.write('<th>' + keys +'</th>');                            //свойств первого объекта в массиве
+        }
+        document.write('</tr>');                        //печатаем ячейки таблицы тем же способом
+        for (let i=0; i < employees.length; i++) {      //цикл, перебирающий объекты в массиве
+            document.write('<tr>');
+            for (let key in this.employees[i]) {        //цикл for in, перебирающий значения свойств объектов массива
+                document.write('<td>' + this.employees[i][key] + '</td>');
+            }
+            document.write('</tr>');
+        }
+        document.write('</table>');
+    }
+}
+const employees = [new Employee('Ivanov', 'Ivan', 25, 5, 'Director'),
+                   new Employee('Petrov', 'Petr', 30, 10, 'Manager'),
+                   new Employee('Sidorov', 'Sidor', 22, 2, 'Trainee'),
+                   new Employee('Tikhonov', 'Tikhon', 45, 25,'Booker'),
+                   new Employee('Novikova', 'Marina', 39, 19, 'Vice-President')];
+const empTable = new EmpTable(employees);
+// empTable.getHtml();         //!!!нужно разкомментировать, чтобы посмотреть решение первой задачи!!!
+//----------------------------------------------------------------------------------------------------------------------
 // Задание 4
 // Реализовать класс StyledEmpTable, который наследуется от
 // класса EmpTable. Добавить метод getStyles(), который возвращает
@@ -116,3 +152,28 @@ console.log('Next date is ' + eD.nextDate(anyDay));
 // метод getHtml() из родительского класса.
 // Создать объект класса StyledEmpTable и вывести на экран
 // результат работы метода getHtml().
+
+class StyledEmpTable extends EmpTable {
+    getStyles() {                                                  //добавляем свойства CSS для таблицы
+        let head = document.querySelector('head');         //находим тег head
+        let newItem = document.createElement('style');     //создаем тег style
+        newItem.innerHTML = '        table {\n' +                  //вводим содержание в тег style (свойства CSS)
+            '            border-collapse: collapse;\n' +
+            '        }\n' +
+            '        th, td {\n' +
+            '            width: 100px;\n' +
+            '            height: 30px;\n' +
+            '            border: 1px solid black;\n' +
+            '        }\n' +
+            '        th {\n' +
+            '            background: slategrey;\n' +
+            '        }';
+        head.appendChild(newItem);                                 //добавляем в head новый элемент
+    }
+    getHtml() {
+        super.getHtml();                                           //выполняем метод getHtml родительского класса
+        this.getStyles();                                          //добавляем к методу функционал
+    }
+}
+let styledEmpTable = new StyledEmpTable(employees);
+styledEmpTable.getHtml();
